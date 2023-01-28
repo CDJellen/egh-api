@@ -1,0 +1,997 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/egh-api.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "HealthService"
+    },
+    {
+      "name": "InfoService"
+    },
+    {
+      "name": "ContributorsService"
+    },
+    {
+      "name": "ContributionsService"
+    },
+    {
+      "name": "ReadMeService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/contributions": {
+      "get": {
+        "operationId": "ContributionsService_ListContributions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListContributionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ContributionsService"
+        ]
+      }
+    },
+    "/api/v1/contributions/{login}": {
+      "get": {
+        "operationId": "ContributionsService_ReadContributions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbReadContributionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "login",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "numContributions",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "ContributionsService"
+        ]
+      },
+      "post": {
+        "operationId": "ContributionsService_CreateContributions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateContributionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "login",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "contributions.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "contributions.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "contributions.avatarUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ContributionsService"
+        ]
+      },
+      "put": {
+        "operationId": "ContributionsService_UpdateContributions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateContributionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "login",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "contributions.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "contributions.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "contributions.avatarUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ContributionsService"
+        ]
+      }
+    },
+    "/api/v1/contributors": {
+      "get": {
+        "operationId": "ContributorsService_ListContributors",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListContributorsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ContributorsService"
+        ]
+      }
+    },
+    "/api/v1/contributors/{owner}/{repo}": {
+      "get": {
+        "operationId": "ContributorsService_ReadContributors",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbReadContributorsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "anon",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "ContributorsService"
+        ]
+      },
+      "post": {
+        "operationId": "ContributorsService_CreateContributors",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateContributorsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ContributorsService"
+        ]
+      },
+      "put": {
+        "operationId": "ContributorsService_UpdateContributors",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateContributorsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ContributorsService"
+        ]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "HealthService_Health",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbHealthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "HealthService"
+        ]
+      }
+    },
+    "/api/v1/info": {
+      "get": {
+        "operationId": "InfoService_ListInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "InfoService"
+        ]
+      }
+    },
+    "/api/v1/info/{owner}/{repo}": {
+      "get": {
+        "operationId": "InfoService_ReadInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbReadInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "InfoService"
+        ]
+      },
+      "post": {
+        "operationId": "InfoService_CreateInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "info.nameWithOwner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.owner.login",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.owner.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.owner.avatarUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "InfoService"
+        ]
+      },
+      "put": {
+        "operationId": "InfoService_UpdateInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "info.nameWithOwner",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.owner.login",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.owner.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "info.owner.avatarUrl",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "InfoService"
+        ]
+      }
+    },
+    "/api/v1/readme": {
+      "get": {
+        "operationId": "ReadMeService_ListReadMe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListReadMeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ReadMeService"
+        ]
+      }
+    },
+    "/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}": {
+      "get": {
+        "operationId": "ReadMeService_ReadReadMe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbReadReadMeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mainBranch",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fileExt",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ReadMeService"
+        ]
+      },
+      "post": {
+        "operationId": "ReadMeService_CreateReadMe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateReadMeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mainBranch",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fileExt",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "readMeHtml.html",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ReadMeService"
+        ]
+      },
+      "put": {
+        "operationId": "ReadMeService_UpdateReadMe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateReadMeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mainBranch",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fileExt",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "readMeHtml.html",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ReadMeService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "pbContributions": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
+        },
+        "contributions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbRepoContribution"
+          }
+        }
+      },
+      "title": "CONTRIBUTIONS"
+    },
+    "pbCreateContributionsResponse": {
+      "type": "object"
+    },
+    "pbCreateContributorsResponse": {
+      "type": "object"
+    },
+    "pbCreateInfoResponse": {
+      "type": "object"
+    },
+    "pbCreateReadMeResponse": {
+      "type": "object"
+    },
+    "pbHealthResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "pbListContributionsResponse": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbContributions"
+          }
+        }
+      }
+    },
+    "pbListContributorsResponse": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbRepoContributors"
+          }
+        }
+      }
+    },
+    "pbListInfoResponse": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbRepoContribution"
+          }
+        }
+      }
+    },
+    "pbListReadMeResponse": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbReadMeHtml"
+          }
+        }
+      }
+    },
+    "pbReadContributionsResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/pbContributions"
+        }
+      }
+    },
+    "pbReadContributorsResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/pbRepoContributors"
+        }
+      }
+    },
+    "pbReadInfoResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/pbRepoContribution"
+        }
+      }
+    },
+    "pbReadMeHtml": {
+      "type": "object",
+      "properties": {
+        "html": {
+          "type": "string"
+        }
+      },
+      "title": "README"
+    },
+    "pbReadReadMeResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/pbReadMeHtml"
+        }
+      }
+    },
+    "pbRepoContribution": {
+      "type": "object",
+      "properties": {
+        "nameWithOwner": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "owner": {
+          "$ref": "#/definitions/pbRepoOwner"
+        }
+      }
+    },
+    "pbRepoContributor": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "nodeId": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
+        },
+        "gravatarId": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "htmlUrl": {
+          "type": "string"
+        },
+        "followersUrl": {
+          "type": "string"
+        },
+        "followingUrl": {
+          "type": "string"
+        },
+        "gistsUrl": {
+          "type": "string"
+        },
+        "starredUrl": {
+          "type": "string"
+        },
+        "subscriptionsUrl": {
+          "type": "string"
+        },
+        "organizationsUrl": {
+          "type": "string"
+        },
+        "reposUrl": {
+          "type": "string"
+        },
+        "eventsUrl": {
+          "type": "string"
+        },
+        "receivedEventsUrl": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "siteAdmin": {
+          "type": "boolean"
+        },
+        "contributions": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "pbRepoContributors": {
+      "type": "object",
+      "properties": {
+        "contributors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbRepoContributor"
+          }
+        }
+      },
+      "title": "CONTRIBUTORS"
+    },
+    "pbRepoOwner": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "pbUpdateContributionsResponse": {
+      "type": "object"
+    },
+    "pbUpdateContributorsResponse": {
+      "type": "object"
+    },
+    "pbUpdateInfoResponse": {
+      "type": "object"
+    },
+    "pbUpdateReadMeResponse": {
+      "type": "object"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

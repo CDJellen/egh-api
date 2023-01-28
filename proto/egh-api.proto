@@ -1,0 +1,313 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/cdjellen/egh-api/pb";
+
+service HealthService {
+  rpc Health (HealthRequest) returns (HealthResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health"
+    };
+  }
+}
+
+service InfoService {
+  rpc ReadInfo (ReadInfoRequest) returns (ReadInfoResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/info/{owner}/{repo}"
+    };
+  }
+
+  rpc ListInfo (ListInfoRequest) returns (ListInfoResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/info"
+    };
+  }
+
+  rpc CreateInfo (CreateInfoRequest) returns (CreateInfoResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/info/{owner}/{repo}"
+    };
+  }
+
+  rpc UpdateInfo (UpdateInfoRequest) returns (UpdateInfoResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/info/{owner}/{repo}"
+    };
+  }
+}
+
+service ContributorsService {
+  rpc ReadContributors (ReadContributorsRequest) returns (ReadContributorsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/contributors/{owner}/{repo}"
+    };
+  }
+
+  rpc ListContributors (ListContributorsRequest) returns (ListContributorsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/contributors"
+    };
+  }
+
+  rpc CreateContributors (CreateContributorsRequest) returns (CreateContributorsResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/contributors/{owner}/{repo}"
+    };
+  }
+
+  rpc UpdateContributors (UpdateContributorsRequest) returns (UpdateContributorsResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/contributors/{owner}/{repo}"
+    };
+  }
+}
+
+service ContributionsService {
+  rpc ReadContributions (ReadContributionsRequest) returns (ReadContributionsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/contributions/{login}"
+    };
+  }
+
+  rpc ListContributions (ListContributionsRequest) returns (ListContributionsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/contributions"
+    };
+  }
+
+  rpc CreateContributions (CreateContributionsRequest) returns (CreateContributionsResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/contributions/{login}"
+    };
+  }
+
+  rpc UpdateContributions (UpdateContributionsRequest) returns (UpdateContributionsResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/contributions/{login}"
+    };
+  }
+}
+
+service ReadMeService {
+  rpc ReadReadMe (ReadReadMeRequest) returns (ReadReadMeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"
+    };
+  }
+
+  rpc ListReadMe (ListReadMeRequest) returns (ListReadMeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/readme"
+    };
+  }
+
+  rpc CreateReadMe (CreateReadMeRequest) returns (CreateReadMeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"
+    };
+  }
+
+  rpc UpdateReadMe (UpdateReadMeRequest) returns (UpdateReadMeResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"
+    };
+  }
+}
+
+// HEALTH
+message HealthRequest {}
+
+message HealthResponse {
+  string message = 1;
+}
+
+// INFO
+message ReadInfoRequest {
+  string owner = 1;
+  string repo = 2;
+}
+
+message ReadInfoResponse {
+  RepoContribution message = 1;
+}
+
+message ListInfoRequest {}
+
+message ListInfoResponse {
+  repeated RepoContribution messages = 1;
+}
+
+message CreateInfoRequest {
+  string owner = 1;
+  string repo = 2;
+  RepoContribution info = 3;
+}
+
+message CreateInfoResponse {}
+
+message UpdateInfoRequest {
+  string owner = 1;
+  string repo = 2;
+  RepoContribution info = 3;
+
+}
+
+message UpdateInfoResponse {}
+
+
+// CONTRIBUTIONS
+message Contributions {
+  optional string name = 1;
+  optional string url = 2;
+  optional string avatar_url = 3;
+  repeated RepoContribution contributions = 4;
+}
+
+message RepoContribution {
+  string name_with_owner = 1;
+  string name = 2;
+  string url = 3;
+  RepoOwner owner = 4;
+}
+
+message RepoOwner {
+  string login = 1;
+  string url = 2;
+  string avatar_url = 3;
+}
+
+message ReadContributionsRequest {
+  string login = 1;
+  int32 num_contributions = 2;
+}
+
+message ReadContributionsResponse {
+  Contributions message = 1;
+}
+
+message ListContributionsRequest {}
+
+message ListContributionsResponse {
+  repeated Contributions messages = 1;
+}
+
+message CreateContributionsRequest {
+  string login = 1;
+  Contributions contributions = 2;
+}
+
+message CreateContributionsResponse {}
+
+message UpdateContributionsRequest {
+  string login = 1;
+  Contributions contributions = 2;
+}
+
+message UpdateContributionsResponse {}
+
+// CONTRIBUTORS
+message RepoContributors {
+  repeated RepoContributor contributors = 1;
+}
+
+message RepoContributor {
+  string login = 1;
+  int64 id = 2;
+  string node_id = 3;
+  string avatar_url = 4;
+  optional string gravatar_id = 5;
+  string url = 6;
+  string html_url = 7;
+  string followers_url = 8;
+  string following_url = 9;
+  string gists_url = 10;
+  string starred_url = 11;
+  string subscriptions_url = 12;
+  string organizations_url = 13;
+  string repos_url = 14;
+  string events_url = 15;
+  string received_events_url = 16;
+  string type = 17;
+  bool site_admin = 18;
+  int32 contributions = 19;
+}
+
+message ReadContributorsRequest {
+  string owner = 1;
+  string repo = 2;
+  string anon = 3;
+  int32 per_page = 4;
+  int32 page = 5;
+}
+
+message ReadContributorsResponse {
+  RepoContributors message = 1;
+}
+
+message ListContributorsRequest {}
+
+message ListContributorsResponse {
+  repeated RepoContributors messages = 1;
+}
+
+message CreateContributorsRequest {
+  string owner = 1;
+  string repo = 2;
+  RepoContributors repoContributors = 3;
+}
+
+message CreateContributorsResponse {}
+
+message UpdateContributorsRequest {
+  string owner = 1;
+  string repo = 2;
+  RepoContributors repoContributors = 3;
+}
+
+message UpdateContributorsResponse {}
+
+// README
+message ReadMeHtml {
+  string html = 1;
+}
+
+message ReadReadMeRequest {
+  string owner = 1;
+  string repo = 2;
+  string mainBranch = 3;
+  string fileExt = 4;
+}
+
+message ReadReadMeResponse {
+  ReadMeHtml message = 1;
+}
+
+message ListReadMeRequest {}
+
+message ListReadMeResponse {
+  repeated ReadMeHtml messages = 1;
+}
+
+message CreateReadMeRequest {
+  string owner = 1;
+  string repo = 2;
+  string mainBranch = 3;
+  string fileExt = 4;
+  ReadMeHtml readMeHtml = 5;
+}
+
+message CreateReadMeResponse {}
+
+message UpdateReadMeRequest {
+  string owner = 1;
+  string repo = 2;
+  string mainBranch = 3;
+  string fileExt = 4;
+  ReadMeHtml readMeHtml = 5;
+}
+
+message UpdateReadMeResponse {}
