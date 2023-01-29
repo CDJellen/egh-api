@@ -11,6 +11,7 @@ import (
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/contributions"
 	"github.com/cdjellen/egh-api/server/contributors"
+	"github.com/cdjellen/egh-api/server/health"
 	"github.com/cdjellen/egh-api/server/info"
 	"github.com/cdjellen/egh-api/server/readme"
 	"github.com/cdjellen/egh-api/store"
@@ -19,7 +20,7 @@ import (
 )
 
 type HealthServer struct {
-	HealthEndpoint Health
+	HealthEndpoint health.Read
 }
 
 type InfoServer struct {
@@ -50,26 +51,16 @@ type ContributorsServer struct {
 	UpdateContributorsEndpoint contributors.Update
 }
 
-type Health func(context.Context, *pb.HealthRequest) (*pb.HealthResponse, error)
-
-func NewHealth() Health {
-	return func(ctx context.Context, req *pb.HealthRequest) (*pb.HealthResponse, error) {
-		return &pb.HealthResponse{
-			Message: "alive",
-		}, nil
-	}
-}
-
-func (s *HealthServer) Health(ctx context.Context, req *pb.HealthRequest) (*pb.HealthResponse, error) {
-	return s.HealthEndpoint(ctx, req)
-}
-
-func NewHealthServer(cache *store.ExploreApiCache) *HealthServer {
+func NewHealthServer() *HealthServer {
 	s := HealthServer{
-		HealthEndpoint: NewHealth(),
+		HealthEndpoint: health.NewRead(app.NewReadHealth()),
 	}
 
 	return &s
+}
+
+func (s *HealthServer) ReadHealth(ctx context.Context, req *pb.HealthRequest) (*pb.HealthResponse, error) {
+	return s.HealthEndpoint(ctx, req)
 }
 
 func NewInfoServer(cache *store.ExploreApiCache) *InfoServer {
@@ -180,7 +171,7 @@ func (s *ContributorsServer) UpdateContributors(ctx context.Context, req *pb.Upd
 	return s.UpdateContributorsEndpoint(ctx, req)
 }
 
-func Run(ctx context.Context, network string, address string, name string, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer) error {
+func Run(ctx context.Context, network string, address string, name string, healthServer *HealthServer, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer) error {
 	l, err := net.Listen(network, address)
 	if err != nil {
 		return err
@@ -193,6 +184,7 @@ func Run(ctx context.Context, network string, address string, name string, infoS
 	}()
 
 	s := grpc.NewServer()
+	pb.RegisterHealthServiceServer(s, healthServer)
 	pb.RegisterInfoServiceServer(s, infoServer)
 	pb.RegisterContributionsServiceServer(s, contributionsServer)
 	pb.RegisterContributorsServiceServer(s, contributorsServer)
@@ -205,11 +197,15 @@ func Run(ctx context.Context, network string, address string, name string, infoS
 	return s.Serve(l)
 }
 
-func RunInProcessGateway(ctx context.Context, addr string, name string, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer, opts ...runtime.ServeMuxOption) error {
+func RunInProcessGateway(ctx context.Context, addr string, name string, healthServer *HealthServer, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer, opts ...runtime.ServeMuxOption) error {
 	gw := runtime.NewServeMux(opts...)
 	docs := http.StripPrefix("/api/docs/", http.FileServer(http.Dir("./swagger/")))
 
-	err := pb.RegisterInfoServiceHandlerServer(ctx, gw, infoServer)
+	err := pb.RegisterHealthServiceHandlerServer(ctx, gw, healthServer)
+	if err != nil {
+		panic(err)
+	}
+	err = pb.RegisterInfoServiceHandlerServer(ctx, gw, infoServer)
 	if err != nil {
 		panic(err)
 	}

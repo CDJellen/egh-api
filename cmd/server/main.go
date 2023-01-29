@@ -33,20 +33,21 @@ func main() {
 	}()
 
 	cache := store.NewExploreApiCache()
+	healthServer := server.NewHealthServer()
 	infoServer := server.NewInfoServer(cache)
 	contributionsServer := server.NewContributionsServer(cache)
 	contributorsServer := server.NewContributorsServer(cache)
 	readMeServer := server.NewReadMeServer(cache)
 
 	go func() {
-		if err := server.Run(ctx, *protocol, *rpc, *name, infoServer, contributionsServer, contributorsServer, readMeServer); err != nil {
+		if err := server.Run(ctx, *protocol, *rpc, *name, healthServer, infoServer, contributionsServer, contributorsServer, readMeServer); err != nil {
 			return
 		}
 	}()
 
 	go func() {
 		opts := []runtime.ServeMuxOption{}
-		if err := server.RunInProcessGateway(ctx, *gw, *name, infoServer, contributionsServer, contributorsServer, readMeServer, opts...); err != nil {
+		if err := server.RunInProcessGateway(ctx, *gw, *name, healthServer, infoServer, contributionsServer, contributorsServer, readMeServer, opts...); err != nil {
 			return
 		}
 	}()

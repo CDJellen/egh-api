@@ -327,7 +327,7 @@
     },
     "/api/v1/healthz": {
       "get": {
-        "operationId": "HealthService_Health",
+        "operationId": "HealthService_ReadHealth",
         "responses": {
           "200": {
             "description": "A successful response.",

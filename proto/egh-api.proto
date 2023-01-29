@@ -7,7 +7,7 @@ import "google/api/annotations.proto";
 option go_package = "github.com/cdjellen/egh-api/pb";
 
 service HealthService {
-  rpc Health (HealthRequest) returns (HealthResponse) {
+  rpc ReadHealth (HealthRequest) returns (HealthResponse) {
     option (google.api.http) = {
       get: "/api/v1/healthz"
     };

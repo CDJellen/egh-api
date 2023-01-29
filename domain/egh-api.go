@@ -90,3 +90,7 @@ type Contributors struct {
 type ReadMe struct {
 	Html string
 }
+
+type Health struct {
+	Status string
+}
