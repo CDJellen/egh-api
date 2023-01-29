@@ -9,7 +9,7 @@ option go_package = "github.com/cdjellen/egh-api/pb";
 service HealthService {
   rpc Health (HealthRequest) returns (HealthResponse) {
     option (google.api.http) = {
-      get: "/api/v1/health"
+      get: "/api/v1/healthz"
     };
   }
 }

@@ -38,6 +38,7 @@ func NewRead(handler app.ReadContributions) Read {
 		}
 		item, err = contributionsRequest(ctx, domain.Login(req.GetLogin()), last)
 		if err != nil {
+			fmt.Printf("failed to get CONTRIBUTIONS with error %+v", err)
 			return &pb.ReadContributionsResponse{Message: ToPb(item)}, err
 		}
 

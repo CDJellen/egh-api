@@ -227,7 +227,7 @@ func RunInProcessGateway(ctx context.Context, addr string, name string, infoServ
 	}
 
 	mux := http.NewServeMux()
-	mux.Handle("/api/", gw)
+	mux.Handle("/", gw)
 	mux.Handle("/api/docs/", docs)
 
 	h := &http.Server{

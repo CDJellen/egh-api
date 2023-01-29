@@ -36,7 +36,8 @@ func NewRead(handler app.ReadContributors) Read {
 		// read from remote
 		item, err = contributorRequest(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo), req.GetAnon(), int(req.GetPerPage()), int(req.GetPage()))
 		if err != nil {
-			fmt.Printf("failed to get CONTRIBUTORS")
+			fmt.Printf("failed to get CONTRIBUTORS with error %+v", err)
+			return &pb.ReadContributorsResponse{Message: ToPb(item)}, err
 		}
 
 		// save to cache

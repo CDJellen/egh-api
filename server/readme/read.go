@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 
@@ -37,7 +38,8 @@ func NewRead(handler app.ReadReadMe) Read {
 		// read from remote
 		item, err = readMeRequest(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo), domain.MainBranch(req.MainBranch), domain.FileExt(req.FileExt))
 		if err != nil {
-			fmt.Printf("failed to get README")
+			fmt.Printf("failed to get README with error %+v", err)
+			return &pb.ReadReadMeResponse{Message: ToPb(item)}, err
 		}
 
 		// save to cache
@@ -49,8 +51,8 @@ func NewRead(handler app.ReadReadMe) Read {
 }
 
 func readMeUrl(o domain.Owner, r domain.Repo, m domain.MainBranch, e domain.FileExt) string {
-	encodedElem := fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/%s/README.%s", o, r, m, e)
-	return fmt.Sprintf("%s%s", remote.GetReadMeEndpoint(), remote.UrlEncode(encodedElem))
+	encodedElem := remote.UrlEncode(fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/%s/README.%s", o, r, m, e))
+	return fmt.Sprintf("%s%s", remote.GetReadMeEndpoint(), encodedElem)
 }
 
 func readMeNotFound(o domain.Owner, r domain.Repo) (resp string) {
@@ -60,6 +62,7 @@ func readMeNotFound(o domain.Owner, r domain.Repo) (resp string) {
 func readMeMdRequest(ctx context.Context, o domain.Owner, r domain.Repo, m domain.MainBranch, e domain.FileExt) (status int, body []byte, err error) {
 	headers := remote.GetReadMeHeaders()
 	url := readMeUrl(o, r, m, e)
+	log.Printf("url: %s, headers: %v", url, *headers)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return 500, body, err
@@ -123,6 +126,7 @@ func readMeHtmlRequest(ctx context.Context, body []byte, owner domain.Owner, rep
 
 func readMeRequest(ctx context.Context, o domain.Owner, r domain.Repo, m domain.MainBranch, e domain.FileExt) (domain.ReadMe, error) {
 	mdStatus, body, err := readMeMdRequest(ctx, o, r, m, e)
+	log.Printf("status: %v, error: %+v, body: %s", mdStatus, err, body)
 	if err != nil {
 		return domain.ReadMe{}, err
 	}

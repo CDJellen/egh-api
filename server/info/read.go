@@ -36,7 +36,8 @@ func NewRead(handler app.ReadInfo) Read {
 		// read from remote
 		item, err = infoRequest(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo))
 		if err != nil {
-			fmt.Printf("failed to get INFO")
+			fmt.Printf("failed to get INFO with error %+v", err)
+			return &pb.ReadInfoResponse{Message: ToPb(item)}, err
 		}
 
 		// save to cache
