@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -23,8 +24,10 @@ type Read func(context.Context, *pb.ReadInfoRequest) (*pb.ReadInfoResponse, erro
 func NewRead(handler app.ReadInfo) Read {
 	return func(ctx context.Context, req *pb.ReadInfoRequest) (*pb.ReadInfoResponse, error) {
 
+		subCtx, span := otel.Tracer("GET ReadMe").Start(ctx, "Run")
+
 		// check the cache
-		item, err := handler(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo))
+		item, err := handler(subCtx, domain.Owner(req.Owner), domain.Repo(req.Repo))
 		if err == nil {
 			return &pb.ReadInfoResponse{Message: ToPb(item)}, nil
 		} else {
@@ -34,14 +37,16 @@ func NewRead(handler app.ReadInfo) Read {
 		}
 
 		// read from remote
-		item, err = infoRequest(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo))
+		item, err = infoRequest(subCtx, domain.Owner(req.Owner), domain.Repo(req.Repo))
 		if err != nil {
 			fmt.Printf("failed to get INFO")
 		}
 
 		// save to cache
 		cacher := app.NewCreateInfo(store.NewExploreApiCache())
-		cacher(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo), item)
+		cacher(subCtx, domain.Owner(req.Owner), domain.Repo(req.Repo), item)
+
+		span.End()
 
 		return &pb.ReadInfoResponse{Message: ToPb(item)}, nil
 	}

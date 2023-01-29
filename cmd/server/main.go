@@ -16,6 +16,7 @@ var (
 	rpc      = flag.String("rpc", ":5000", "gRPC server endpoint")
 	protocol = flag.String("protocol", "tcp", "protocol type")
 	gw       = flag.String("gw", ":8080", "REST gateway endpoint")
+	name     = flag.String("name", "egh-api", "name for the server")
 )
 
 func main() {
@@ -38,14 +39,16 @@ func main() {
 	readMeServer := server.NewReadMeServer(cache)
 
 	go func() {
-		if err := server.Run(ctx, *protocol, *rpc, infoServer, contributionsServer, contributorsServer, readMeServer); err != nil {
+		rpcName := fmt.Sprintf("%s-rpc", *name)
+		if err := server.Run(ctx, *protocol, *rpc, rpcName, infoServer, contributionsServer, contributorsServer, readMeServer); err != nil {
 			return
 		}
 	}()
 
 	go func() {
+		gwName := fmt.Sprintf("%s-rpc", *name)
 		opts := []runtime.ServeMuxOption{}
-		if err := server.RunInProcessGateway(ctx, *gw, infoServer, contributionsServer, contributorsServer, readMeServer, opts...); err != nil {
+		if err := server.RunInProcessGateway(ctx, *gw, gwName, infoServer, contributionsServer, contributorsServer, readMeServer, opts...); err != nil {
 			return
 		}
 	}()
