@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	rpc      = flag.String("rpc", ":5000", "gRPC server endpoint")
+	rpc      = flag.String("rpc", ":50051", "gRPC server endpoint")
 	protocol = flag.String("protocol", "tcp", "protocol type")
 	gw       = flag.String("gw", ":8080", "REST gateway endpoint")
 	name     = flag.String("name", "egh-api", "Server name for logging and tracing")
