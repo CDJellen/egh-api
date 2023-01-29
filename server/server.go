@@ -180,11 +180,12 @@ func (s *ContributorsServer) UpdateContributors(ctx context.Context, req *pb.Upd
 	return s.UpdateContributorsEndpoint(ctx, req)
 }
 
-func Run(ctx context.Context, network string, address string, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer) error {
+func Run(ctx context.Context, network string, address string, name string, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer) error {
 	l, err := net.Listen(network, address)
 	if err != nil {
 		return err
 	}
+
 	defer func() {
 		if err := l.Close(); err != nil {
 			fmt.Printf("server failed to run with error: %+v", err)
@@ -204,7 +205,7 @@ func Run(ctx context.Context, network string, address string, infoServer *InfoSe
 	return s.Serve(l)
 }
 
-func RunInProcessGateway(ctx context.Context, addr string, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer, opts ...runtime.ServeMuxOption) error {
+func RunInProcessGateway(ctx context.Context, addr string, name string, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer, opts ...runtime.ServeMuxOption) error {
 	gw := runtime.NewServeMux(opts...)
 	docs := http.StripPrefix("/api/docs/", http.FileServer(http.Dir("./swagger/")))
 

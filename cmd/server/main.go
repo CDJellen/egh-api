@@ -16,6 +16,7 @@ var (
 	rpc      = flag.String("rpc", ":5000", "gRPC server endpoint")
 	protocol = flag.String("protocol", "tcp", "protocol type")
 	gw       = flag.String("gw", ":8080", "REST gateway endpoint")
+	name     = flag.String("name", "egh-api", "Server name for logging and tracing")
 )
 
 func main() {
@@ -38,14 +39,14 @@ func main() {
 	readMeServer := server.NewReadMeServer(cache)
 
 	go func() {
-		if err := server.Run(ctx, *protocol, *rpc, infoServer, contributionsServer, contributorsServer, readMeServer); err != nil {
+		if err := server.Run(ctx, *protocol, *rpc, *name, infoServer, contributionsServer, contributorsServer, readMeServer); err != nil {
 			return
 		}
 	}()
 
 	go func() {
 		opts := []runtime.ServeMuxOption{}
-		if err := server.RunInProcessGateway(ctx, *gw, infoServer, contributionsServer, contributorsServer, readMeServer, opts...); err != nil {
+		if err := server.RunInProcessGateway(ctx, *gw, *name, infoServer, contributionsServer, contributorsServer, readMeServer, opts...); err != nil {
 			return
 		}
 	}()
