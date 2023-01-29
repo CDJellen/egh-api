@@ -15,6 +15,7 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/remote"
+	"github.com/cdjellen/egh-api/store"
 )
 
 type Read func(context.Context, *pb.ReadContributorsRequest) (*pb.ReadContributorsResponse, error)
@@ -37,6 +38,11 @@ func NewRead(handler app.ReadContributors) Read {
 		if err != nil {
 			fmt.Printf("failed to get CONTRIBUTORS")
 		}
+
+		// save to cache
+		cacher := app.NewCreateContributors(store.NewExploreApiCache())
+		cacher(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo), item)
+
 		return &pb.ReadContributorsResponse{Message: ToPb(item)}, nil
 	}
 }

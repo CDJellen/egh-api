@@ -13,6 +13,7 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/remote"
+	"github.com/cdjellen/egh-api/store"
 )
 
 type Read func(context.Context, *pb.ReadContributionsRequest) (*pb.ReadContributionsResponse, error)
@@ -39,6 +40,11 @@ func NewRead(handler app.ReadContributions) Read {
 		if err != nil {
 			return &pb.ReadContributionsResponse{Message: ToPb(item)}, err
 		}
+
+		// save to cache
+		cacher := app.NewCreateContributions(store.NewExploreApiCache())
+		cacher(ctx, domain.Login(req.Login), item)
+
 		return &pb.ReadContributionsResponse{Message: ToPb(item)}, nil
 	}
 }
