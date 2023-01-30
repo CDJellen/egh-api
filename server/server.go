@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/rs/cors"
+
 	"github.com/cdjellen/egh-api/app"
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/contributions"
@@ -226,9 +228,19 @@ func RunInProcessGateway(ctx context.Context, addr string, name string, healthSe
 	mux.Handle("/", gw)
 	mux.Handle("/api/docs/", docs)
 
+	// CORS
+	withCors := cors.New(cors.Options{
+		AllowOriginFunc:  func(origin string) bool { return true },
+		AllowedMethods:   []string{"GET", "POST", "PATCH", "PUT", "OPTIONS"},
+		AllowedHeaders:   []string{"ACCEPT", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}).Handler(mux)
+
 	h := &http.Server{
 		Addr:              addr,
-		Handler:           mux,
+		Handler:           withCors,
 		ReadHeaderTimeout: 15 * time.Second,
 	}
 
