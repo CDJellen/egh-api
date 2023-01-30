@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 
@@ -91,6 +92,7 @@ func contributorRequest(ctx context.Context, o domain.Owner, r domain.Repo, anon
 	if err != nil {
 		return domain.RepoContributors{}, err
 	}
+	log.Printf("body:\n%+v\n%s", body, body)
 	err = json.Unmarshal(body, &item)
 	if err != nil {
 		fmt.Printf("\n\n%+v\n", err)

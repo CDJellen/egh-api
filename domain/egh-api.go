@@ -43,15 +43,15 @@ type FileExt string
 
 type RepoOwner struct {
 	Login     string `json:"login"`
-	Url       string `json:"url"`
+	Url       string `json:"html_url"`
 	AvatarUrl string `json:"avatar_url"`
 }
 
 type Contribution struct {
-	NameWithOwner string `json:"full_name"`
-	Name          string `json:"name"`
-	Url           string `json:"url"`
-	Owner         RepoOwner
+	NameWithOwner string    `json:"full_name"`
+	Name          string    `json:"name"`
+	Url           string    `json:"url"`
+	Owner         RepoOwner `json:"owner"`
 }
 
 type Contributions struct {
