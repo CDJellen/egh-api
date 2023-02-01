@@ -1,0 +1,60 @@
+name: Trigger auto deployment for egh-api
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ trunk ]
+    paths:
+    - '**'
+    - '.github/workflows/egh-api-AutoDeployTrigger-83741de3-3470-4e68-b513-7e7645228d0f.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:      
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to container registry
+        uses: docker/login-action@v1
+        with:
+          registry: eghacr.azurecr.io
+          username: ${{ secrets.EGHAPI_REGISTRY_USERNAME }}
+          password: ${{ secrets.EGHAPI_REGISTRY_PASSWORD }}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: eghacr.azurecr.io/egh-api:${{ github.sha }}
+          file: ./Dockerfile
+          context: ./
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.EGHAPI_AZURE_CREDENTIALS }}
+
+
+      - name: Deploy to containerapp
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az config set extension.use_dynamic_install=yes_without_prompt
+            az containerapp registry set -n egh-api -g egh --server eghacr.azurecr.io --username  ${{ secrets.EGHAPI_REGISTRY_USERNAME }} --password ${{ secrets.EGHAPI_REGISTRY_PASSWORD }}
+            az containerapp update -n egh-api -g egh --image eghacr.azurecr.io/egh-api:${{ github.sha }}
