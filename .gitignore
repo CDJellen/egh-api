@@ -2,3 +2,5 @@
 *.env
 *.yml
 vendor
+frontend/*
+!frontend

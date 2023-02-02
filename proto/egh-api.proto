@@ -113,7 +113,7 @@ service ReadMeService {
 
   rpc UpdateReadMe (UpdateReadMeRequest) returns (UpdateReadMeResponse) {
     option (google.api.http) = {
-      put: "/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"
+      put: "/api/v1/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"
     };
   }
 }

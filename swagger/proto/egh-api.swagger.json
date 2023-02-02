@@ -28,6 +28,60 @@
     "application/json"
   ],
   "paths": {
+    "/api/v1/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}": {
+      "put": {
+        "operationId": "ReadMeService_UpdateReadMe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateReadMeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mainBranch",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fileExt",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "readMeHtml.html",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ReadMeService"
+        ]
+      }
+    },
     "/api/v1/contributions": {
       "get": {
         "operationId": "ContributionsService_ListContributions",
@@ -621,58 +675,6 @@
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/pbCreateReadMeResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "mainBranch",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "fileExt",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "readMeHtml.html",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "ReadMeService"
-        ]
-      },
-      "put": {
-        "operationId": "ReadMeService_UpdateReadMe",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbUpdateReadMeResponse"
             }
           },
           "default": {

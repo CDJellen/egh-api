@@ -202,6 +202,7 @@ func Run(ctx context.Context, network string, address string, name string, healt
 func RunInProcessGateway(ctx context.Context, addr string, name string, healthServer *HealthServer, infoServer *InfoServer, contributionsServer *ContributionsServer, contributorsServer *ContributorsServer, readMeServer *ReadMeServer, opts ...runtime.ServeMuxOption) error {
 	gw := runtime.NewServeMux(opts...)
 	docs := http.StripPrefix("/api/docs/", http.FileServer(http.Dir("./swagger/")))
+	frontend := http.StripPrefix("/", http.FileServer(http.Dir("./frontend/")))
 
 	err := pb.RegisterHealthServiceHandlerServer(ctx, gw, healthServer)
 	if err != nil {
@@ -225,7 +226,8 @@ func RunInProcessGateway(ctx context.Context, addr string, name string, healthSe
 	}
 
 	mux := http.NewServeMux()
-	mux.Handle("/", gw)
+	mux.Handle("/", frontend)
+	mux.Handle("/api/v1/", gw)
 	mux.Handle("/api/docs/", docs)
 
 	// CORS

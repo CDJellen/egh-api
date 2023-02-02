@@ -1675,7 +1675,7 @@ func RegisterReadMeServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.ReadMeService/UpdateReadMe", runtime.WithHTTPPathPattern("/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.ReadMeService/UpdateReadMe", runtime.WithHTTPPathPattern("/api/v1/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2323,7 +2323,7 @@ func RegisterReadMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.ReadMeService/UpdateReadMe", runtime.WithHTTPPathPattern("/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.ReadMeService/UpdateReadMe", runtime.WithHTTPPathPattern("/api/v1/api/v1/readme/{owner}/{repo}/{mainBranch}/{fileExt}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2349,7 +2349,7 @@ var (
 
 	pattern_ReadMeService_CreateReadMe_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "readme", "owner", "repo", "mainBranch", "fileExt"}, ""))
 
-	pattern_ReadMeService_UpdateReadMe_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "readme", "owner", "repo", "mainBranch", "fileExt"}, ""))
+	pattern_ReadMeService_UpdateReadMe_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "readme", "owner", "repo", "mainBranch", "fileExt"}, ""))
 )
 
 var (
