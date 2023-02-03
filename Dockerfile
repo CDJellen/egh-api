@@ -9,7 +9,7 @@ RUN go mod download
 
 COPY . .
 
-RUN cd cmd/server/ && go build -o egh-api 
+RUN cd cmd/server/ && go build -buildvcs=false -o=egh-api  
 
 EXPOSE 8080
 
