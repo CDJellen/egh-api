@@ -3,6 +3,7 @@ package info
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -39,7 +40,7 @@ func NewRead(handler app.ReadInfo) Read {
 			return &pb.ReadInfoResponse{Message: ToPb(item)}, err
 		}
 
-		return &pb.ReadInfoResponse{Message: ToPb(item)}, nil
+		return &pb.ReadInfoResponse{Message: ToPb(item)}, errors.New("cache miss")
 	}
 }
 

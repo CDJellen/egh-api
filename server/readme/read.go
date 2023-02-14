@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -41,7 +42,7 @@ func NewRead(handler app.ReadReadMe) Read {
 			return &pb.ReadReadMeResponse{Message: ToPb(item)}, err
 		}
 
-		return &pb.ReadReadMeResponse{Message: ToPb(item)}, nil
+		return &pb.ReadReadMeResponse{Message: ToPb(item)}, errors.New("cache miss")
 	}
 }
 

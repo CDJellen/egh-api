@@ -2,6 +2,7 @@ package contributions
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -42,7 +43,7 @@ func NewRead(handler app.ReadContributions) Read {
 			return &pb.ReadContributionsResponse{Message: ToPb(item)}, err
 		}
 
-		return &pb.ReadContributionsResponse{Message: ToPb(item)}, nil
+		return &pb.ReadContributionsResponse{Message: ToPb(item)}, errors.New("cache miss")
 	}
 }
 

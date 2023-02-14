@@ -3,6 +3,7 @@ package contributors
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -40,7 +41,7 @@ func NewRead(handler app.ReadContributors) Read {
 			return &pb.ReadContributorsResponse{Message: ToPb(item)}, err
 		}
 
-		return &pb.ReadContributorsResponse{Message: ToPb(item)}, nil
+		return &pb.ReadContributorsResponse{Message: ToPb(item)}, errors.New("cache miss")
 	}
 }
 

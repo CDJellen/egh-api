@@ -8,12 +8,16 @@ import (
 
 type ReadContributions func(context.Context, domain.Login) (domain.Contributions, error)
 
-func NewReadContributions(cache domain.ExploreApiReader) ReadContributions {
+func NewReadContributions(cache domain.ExploreApi) ReadContributions {
 	return func(ctx context.Context, login domain.Login) (domain.Contributions, error) {
 
 		item, err := cache.ReadContributions(ctx, login)
 		if err != nil {
 			return item, err
+		}
+
+		if err.Error() == "cache miss" {
+			cache.CreateContributions(ctx, login, item)
 		}
 
 		return item, nil
@@ -22,7 +26,7 @@ func NewReadContributions(cache domain.ExploreApiReader) ReadContributions {
 
 type ListContributions func(context.Context) ([]domain.Contributions, error)
 
-func NewListContributions(cache domain.ExploreApiReader) ListContributions {
+func NewListContributions(cache domain.ExploreApi) ListContributions {
 	return func(ctx context.Context) ([]domain.Contributions, error) {
 		return cache.ListContributions(ctx)
 	}
@@ -30,7 +34,7 @@ func NewListContributions(cache domain.ExploreApiReader) ListContributions {
 
 type CreateContributions func(context.Context, domain.Login, domain.Contributions) error
 
-func NewCreateContributions(cache domain.ExploreApiWriter) CreateContributions {
+func NewCreateContributions(cache domain.ExploreApi) CreateContributions {
 	return func(ctx context.Context, login domain.Login, contributions domain.Contributions) error {
 
 		err := cache.CreateContributions(ctx, login, contributions)
@@ -44,7 +48,7 @@ func NewCreateContributions(cache domain.ExploreApiWriter) CreateContributions {
 
 type UpdateContributions func(context.Context, domain.Login, domain.Contributions) error
 
-func NewUpdateContributions(cache domain.ExploreApiWriter) UpdateContributions {
+func NewUpdateContributions(cache domain.ExploreApi) UpdateContributions {
 	return func(ctx context.Context, login domain.Login, contributions domain.Contributions) error {
 
 		err := cache.UpdateContributions(ctx, login, contributions)

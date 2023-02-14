@@ -14,10 +14,10 @@ import (
 )
 
 var (
-	rpc      = flag.String("rpc", ":50051", "gRPC server endpoint")
-	protocol = flag.String("protocol", "tcp", "protocol type")
-	gw       = flag.String("gw", ":8080", "REST gateway endpoint")
 	name     = flag.String("name", "egh-api", "Server name for logging and tracing")
+	protocol = flag.String("protocol", "tcp", "protocol type")
+	rpc      = flag.String("rpc", ":50051", "gRPC server endpoint")
+	gw       = flag.String("gw", ":8080", "REST gateway endpoint")
 	store    = flag.String("store", "redis", "backend cache for remote requests")
 	rds      = flag.String("redis", "0.0.0.0:6379", "address for optional redis cluster")
 	user     = flag.String("user", "", "optional redis username")
@@ -47,17 +47,17 @@ func main() {
 	if *store == "redis" {
 		cache := redis.NewRedisCache(*rds, *user, *pass, *db)
 		healthServer = server.NewHealthServer()
-		infoServer = server.NewInfoServer(cache, cache)
-		contributionsServer = server.NewContributionsServer(cache, cache)
-		contributorsServer = server.NewContributorsServer(cache, cache)
-		readMeServer = server.NewReadMeServer(cache, cache)
+		infoServer = server.NewInfoServer(cache)
+		contributionsServer = server.NewContributionsServer(cache)
+		contributorsServer = server.NewContributorsServer(cache)
+		readMeServer = server.NewReadMeServer(cache)
 	} else {
 		cache := mem.NewExploreApiCache()
 		healthServer = server.NewHealthServer()
-		infoServer = server.NewInfoServer(cache, cache)
-		contributionsServer = server.NewContributionsServer(cache, cache)
-		contributorsServer = server.NewContributorsServer(cache, cache)
-		readMeServer = server.NewReadMeServer(cache, cache)
+		infoServer = server.NewInfoServer(cache)
+		contributionsServer = server.NewContributionsServer(cache)
+		contributorsServer = server.NewContributorsServer(cache)
+		readMeServer = server.NewReadMeServer(cache)
 	}
 
 	go func() {

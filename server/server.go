@@ -65,12 +65,12 @@ func (s *HealthServer) ReadHealth(ctx context.Context, req *pb.HealthRequest) (*
 	return s.HealthEndpoint(ctx, req)
 }
 
-func NewInfoServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *InfoServer {
+func NewInfoServer(rw domain.ExploreApi) *InfoServer {
 	s := InfoServer{
-		ReadInfoEndpoint:   info.NewRead(app.NewReadInfo(reader)),
-		ListInfoEndpoint:   info.NewList(app.NewListInfo(reader)),
-		CreateInfoEndpoint: info.NewCreate(app.NewCreateInfo(writer)),
-		UpdateInfoEndpoint: info.NewUpdate(app.NewUpdateInfo(writer)),
+		ReadInfoEndpoint:   info.NewRead(app.NewReadInfo(rw)),
+		ListInfoEndpoint:   info.NewList(app.NewListInfo(rw)),
+		CreateInfoEndpoint: info.NewCreate(app.NewCreateInfo(rw)),
+		UpdateInfoEndpoint: info.NewUpdate(app.NewUpdateInfo(rw)),
 	}
 
 	return &s
@@ -92,12 +92,12 @@ func (s *InfoServer) UpdateInfo(ctx context.Context, req *pb.UpdateInfoRequest) 
 	return s.UpdateInfoEndpoint(ctx, req)
 }
 
-func NewReadMeServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *ReadMeServer {
+func NewReadMeServer(rw domain.ExploreApi) *ReadMeServer {
 	s := ReadMeServer{
-		ReadReadMeEndpoint:   readme.NewRead(app.NewReadReadMe(reader)),
-		ListReadMeEndpoint:   readme.NewList(app.NewListReadMe(reader)),
-		CreateReadMeEndpoint: readme.NewCreate(app.NewCreateReadMe(writer)),
-		UpdateReadMeEndpoint: readme.NewUpdate(app.NewUpdateReadMe(writer)),
+		ReadReadMeEndpoint:   readme.NewRead(app.NewReadReadMe(rw)),
+		ListReadMeEndpoint:   readme.NewList(app.NewListReadMe(rw)),
+		CreateReadMeEndpoint: readme.NewCreate(app.NewCreateReadMe(rw)),
+		UpdateReadMeEndpoint: readme.NewUpdate(app.NewUpdateReadMe(rw)),
 	}
 
 	return &s
@@ -119,12 +119,12 @@ func (s *ReadMeServer) UpdateReadMe(ctx context.Context, req *pb.UpdateReadMeReq
 	return s.UpdateReadMeEndpoint(ctx, req)
 }
 
-func NewContributionsServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *ContributionsServer {
+func NewContributionsServer(rw domain.ExploreApi) *ContributionsServer {
 	s := ContributionsServer{
-		ReadContributionsEndpoint:   contributions.NewRead(app.NewReadContributions(reader)),
-		ListContributionsEndpoint:   contributions.NewList(app.NewListContributions(reader)),
-		CreateContributionsEndpoint: contributions.NewCreate(app.NewCreateContributions(writer)),
-		UpdateContributionsEndpoint: contributions.NewUpdate(app.NewUpdateContributions(writer)),
+		ReadContributionsEndpoint:   contributions.NewRead(app.NewReadContributions(rw)),
+		ListContributionsEndpoint:   contributions.NewList(app.NewListContributions(rw)),
+		CreateContributionsEndpoint: contributions.NewCreate(app.NewCreateContributions(rw)),
+		UpdateContributionsEndpoint: contributions.NewUpdate(app.NewUpdateContributions(rw)),
 	}
 
 	return &s
@@ -146,12 +146,12 @@ func (s *ContributionsServer) UpdateContributions(ctx context.Context, req *pb.U
 	return s.UpdateContributionsEndpoint(ctx, req)
 }
 
-func NewContributorsServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *ContributorsServer {
+func NewContributorsServer(rw domain.ExploreApi) *ContributorsServer {
 	s := ContributorsServer{
-		ReadContributorsEndpoint:   contributors.NewRead(app.NewReadContributors(reader)),
-		ListContributorsEndpoint:   contributors.NewList(app.NewListContributors(reader)),
-		CreateContributorsEndpoint: contributors.NewCreate(app.NewCreateContributors(writer)),
-		UpdateContributorsEndpoint: contributors.NewUpdate(app.NewUpdateContributors(writer)),
+		ReadContributorsEndpoint:   contributors.NewRead(app.NewReadContributors(rw)),
+		ListContributorsEndpoint:   contributors.NewList(app.NewListContributors(rw)),
+		CreateContributorsEndpoint: contributors.NewCreate(app.NewCreateContributors(rw)),
+		UpdateContributorsEndpoint: contributors.NewUpdate(app.NewUpdateContributors(rw)),
 	}
 
 	return &s
