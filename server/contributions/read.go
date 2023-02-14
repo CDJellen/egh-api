@@ -13,7 +13,6 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/remote"
-	"github.com/cdjellen/egh-api/store"
 )
 
 type Read func(context.Context, *pb.ReadContributionsRequest) (*pb.ReadContributionsResponse, error)
@@ -21,8 +20,9 @@ type Read func(context.Context, *pb.ReadContributionsRequest) (*pb.ReadContribut
 func NewRead(handler app.ReadContributions) Read {
 	return func(ctx context.Context, req *pb.ReadContributionsRequest) (*pb.ReadContributionsResponse, error) {
 
+		login := domain.Login(req.GetLogin())
 		// check the cache
-		item, err := handler(ctx, domain.Login(req.Login))
+		item, err := handler(ctx, login)
 		if err == nil {
 			return &pb.ReadContributionsResponse{Message: ToPb(item)}, nil
 		} else {
@@ -36,15 +36,11 @@ func NewRead(handler app.ReadContributions) Read {
 		if last == 0 {
 			last = int32(30)
 		}
-		item, err = contributionsRequest(ctx, domain.Login(req.GetLogin()), last)
+		item, err = contributionsRequest(ctx, login, last)
 		if err != nil {
 			fmt.Printf("failed to get CONTRIBUTIONS with error %+v", err)
 			return &pb.ReadContributionsResponse{Message: ToPb(item)}, err
 		}
-
-		// save to cache
-		cacher := app.NewCreateContributions(store.NewExploreApiCache())
-		cacher(ctx, domain.Login(req.Login), item)
 
 		return &pb.ReadContributionsResponse{Message: ToPb(item)}, nil
 	}

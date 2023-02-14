@@ -17,7 +17,6 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/remote"
-	"github.com/cdjellen/egh-api/store"
 )
 
 type Read func(context.Context, *pb.ReadReadMeRequest) (*pb.ReadReadMeResponse, error)
@@ -41,10 +40,6 @@ func NewRead(handler app.ReadReadMe) Read {
 			fmt.Printf("failed to get README with error %+v", err)
 			return &pb.ReadReadMeResponse{Message: ToPb(item)}, err
 		}
-
-		// save to cache
-		cacher := app.NewCreateReadMe(store.NewExploreApiCache())
-		cacher(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo), domain.MainBranch(req.MainBranch), domain.FileExt(req.FileExt), item)
 
 		return &pb.ReadReadMeResponse{Message: ToPb(item)}, nil
 	}

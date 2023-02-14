@@ -10,13 +10,13 @@ import (
 	"github.com/rs/cors"
 
 	"github.com/cdjellen/egh-api/app"
+	"github.com/cdjellen/egh-api/domain"
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/contributions"
 	"github.com/cdjellen/egh-api/server/contributors"
 	"github.com/cdjellen/egh-api/server/health"
 	"github.com/cdjellen/egh-api/server/info"
 	"github.com/cdjellen/egh-api/server/readme"
-	"github.com/cdjellen/egh-api/store"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
@@ -65,12 +65,12 @@ func (s *HealthServer) ReadHealth(ctx context.Context, req *pb.HealthRequest) (*
 	return s.HealthEndpoint(ctx, req)
 }
 
-func NewInfoServer(cache *store.ExploreApiCache) *InfoServer {
+func NewInfoServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *InfoServer {
 	s := InfoServer{
-		ReadInfoEndpoint:   info.NewRead(app.NewReadInfo(cache)),
-		ListInfoEndpoint:   info.NewList(app.NewListInfo(cache)),
-		CreateInfoEndpoint: info.NewCreate(app.NewCreateInfo(cache)),
-		UpdateInfoEndpoint: info.NewUpdate(app.NewUpdateInfo(cache)),
+		ReadInfoEndpoint:   info.NewRead(app.NewReadInfo(reader)),
+		ListInfoEndpoint:   info.NewList(app.NewListInfo(reader)),
+		CreateInfoEndpoint: info.NewCreate(app.NewCreateInfo(writer)),
+		UpdateInfoEndpoint: info.NewUpdate(app.NewUpdateInfo(writer)),
 	}
 
 	return &s
@@ -92,12 +92,12 @@ func (s *InfoServer) UpdateInfo(ctx context.Context, req *pb.UpdateInfoRequest) 
 	return s.UpdateInfoEndpoint(ctx, req)
 }
 
-func NewReadMeServer(cache *store.ExploreApiCache) *ReadMeServer {
+func NewReadMeServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *ReadMeServer {
 	s := ReadMeServer{
-		ReadReadMeEndpoint:   readme.NewRead(app.NewReadReadMe(cache)),
-		ListReadMeEndpoint:   readme.NewList(app.NewListReadMe(cache)),
-		CreateReadMeEndpoint: readme.NewCreate(app.NewCreateReadMe(cache)),
-		UpdateReadMeEndpoint: readme.NewUpdate(app.NewUpdateReadMe(cache)),
+		ReadReadMeEndpoint:   readme.NewRead(app.NewReadReadMe(reader)),
+		ListReadMeEndpoint:   readme.NewList(app.NewListReadMe(reader)),
+		CreateReadMeEndpoint: readme.NewCreate(app.NewCreateReadMe(writer)),
+		UpdateReadMeEndpoint: readme.NewUpdate(app.NewUpdateReadMe(writer)),
 	}
 
 	return &s
@@ -119,12 +119,12 @@ func (s *ReadMeServer) UpdateReadMe(ctx context.Context, req *pb.UpdateReadMeReq
 	return s.UpdateReadMeEndpoint(ctx, req)
 }
 
-func NewContributionsServer(cache *store.ExploreApiCache) *ContributionsServer {
+func NewContributionsServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *ContributionsServer {
 	s := ContributionsServer{
-		ReadContributionsEndpoint:   contributions.NewRead(app.NewReadContributions(cache)),
-		ListContributionsEndpoint:   contributions.NewList(app.NewListContributions(cache)),
-		CreateContributionsEndpoint: contributions.NewCreate(app.NewCreateContributions(cache)),
-		UpdateContributionsEndpoint: contributions.NewUpdate(app.NewUpdateContributions(cache)),
+		ReadContributionsEndpoint:   contributions.NewRead(app.NewReadContributions(reader)),
+		ListContributionsEndpoint:   contributions.NewList(app.NewListContributions(reader)),
+		CreateContributionsEndpoint: contributions.NewCreate(app.NewCreateContributions(writer)),
+		UpdateContributionsEndpoint: contributions.NewUpdate(app.NewUpdateContributions(writer)),
 	}
 
 	return &s
@@ -146,12 +146,12 @@ func (s *ContributionsServer) UpdateContributions(ctx context.Context, req *pb.U
 	return s.UpdateContributionsEndpoint(ctx, req)
 }
 
-func NewContributorsServer(cache *store.ExploreApiCache) *ContributorsServer {
+func NewContributorsServer(reader domain.ExploreApiReader, writer domain.ExploreApiWriter) *ContributorsServer {
 	s := ContributorsServer{
-		ReadContributorsEndpoint:   contributors.NewRead(app.NewReadContributors(cache)),
-		ListContributorsEndpoint:   contributors.NewList(app.NewListContributors(cache)),
-		CreateContributorsEndpoint: contributors.NewCreate(app.NewCreateContributors(cache)),
-		UpdateContributorsEndpoint: contributors.NewUpdate(app.NewUpdateContributors(cache)),
+		ReadContributorsEndpoint:   contributors.NewRead(app.NewReadContributors(reader)),
+		ListContributorsEndpoint:   contributors.NewList(app.NewListContributors(reader)),
+		CreateContributorsEndpoint: contributors.NewCreate(app.NewCreateContributors(writer)),
+		UpdateContributorsEndpoint: contributors.NewUpdate(app.NewUpdateContributors(writer)),
 	}
 
 	return &s

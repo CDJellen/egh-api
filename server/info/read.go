@@ -15,7 +15,6 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 	pb "github.com/cdjellen/egh-api/pb/proto"
 	"github.com/cdjellen/egh-api/server/remote"
-	"github.com/cdjellen/egh-api/store"
 )
 
 type Read func(context.Context, *pb.ReadInfoRequest) (*pb.ReadInfoResponse, error)
@@ -39,10 +38,6 @@ func NewRead(handler app.ReadInfo) Read {
 			fmt.Printf("failed to get INFO with error %+v", err)
 			return &pb.ReadInfoResponse{Message: ToPb(item)}, err
 		}
-
-		// save to cache
-		cacher := app.NewCreateInfo(store.NewExploreApiCache())
-		cacher(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo), item)
 
 		return &pb.ReadInfoResponse{Message: ToPb(item)}, nil
 	}
