@@ -1,4 +1,4 @@
-package mem
+package redis
 
 import (
 	"context"
