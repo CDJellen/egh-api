@@ -8,7 +8,7 @@ import (
 	"os/signal"
 
 	"github.com/cdjellen/egh-api/server"
-	"github.com/cdjellen/egh-api/store"
+	"github.com/cdjellen/egh-api/store/mem"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
 
@@ -32,12 +32,12 @@ func main() {
 		cancel()
 	}()
 
-	cache := store.NewExploreApiCache()
+	cache := mem.NewExploreApiCache()
 	healthServer := server.NewHealthServer()
-	infoServer := server.NewInfoServer(cache)
-	contributionsServer := server.NewContributionsServer(cache)
-	contributorsServer := server.NewContributorsServer(cache)
-	readMeServer := server.NewReadMeServer(cache)
+	infoServer := server.NewInfoServer(cache, cache)
+	contributionsServer := server.NewContributionsServer(cache, cache)
+	contributorsServer := server.NewContributorsServer(cache, cache)
+	readMeServer := server.NewReadMeServer(cache, cache)
 
 	go func() {
 		if err := server.Run(ctx, *protocol, *rpc, *name, healthServer, infoServer, contributionsServer, contributorsServer, readMeServer); err != nil {
