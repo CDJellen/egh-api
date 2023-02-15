@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 
@@ -26,7 +27,7 @@ func NewReadInfo(cache domain.ExploreApi) ReadInfo {
 			// read from remote
 			item, err = infoRequest(ctx, owner, repo)
 			if err != nil {
-				fmt.Printf("failed to get INFO with error %+v", err)
+				log.Printf("failed to get INFO with error %+v", err)
 				return item, err
 			}
 
@@ -53,7 +54,6 @@ func infoUrl(o domain.Owner, r domain.Repo) string {
 func infoRequest(ctx context.Context, o domain.Owner, r domain.Repo) (domain.Contribution, error) {
 	headers := remote.GetGitHubHeaders()
 	url := infoUrl(o, r)
-	fmt.Printf("URL: %s", url)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return domain.Contribution{}, err
@@ -79,7 +79,7 @@ func infoRequest(ctx context.Context, o domain.Owner, r domain.Repo) (domain.Con
 	}
 	err = json.Unmarshal(body, &item)
 	if err != nil {
-		fmt.Printf("\n\n%+v\n", err)
+		log.Printf("\n\n%+v\n", err)
 		return domain.Contribution{}, err
 	}
 

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
+	"log"
 	"os"
 	"os/signal"
 
@@ -75,10 +75,10 @@ func main() {
 
 	select {
 	case <-quit:
-		fmt.Println("shutting down server")
+		log.Println("shutting down server")
 		cancel()
 	case <-ctx.Done():
-		fmt.Println("shutting down server")
+		log.Println("shutting down server")
 		cancel()
 	}
 }

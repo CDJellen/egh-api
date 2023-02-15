@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"time"
@@ -181,7 +182,7 @@ func Run(ctx context.Context, network string, address string, name string, healt
 
 	defer func() {
 		if err := l.Close(); err != nil {
-			fmt.Printf("server failed to run with error: %+v", err)
+			log.Printf("server failed to run with error: %+v", err)
 		}
 	}()
 

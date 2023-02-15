@@ -28,7 +28,7 @@ func NewReadReadMe(cache domain.ExploreApi) ReadReadMe {
 			// read from remote
 			item, err = readMeRequest(ctx, owner, repo, main, ext)
 			if err != nil {
-				fmt.Printf("failed to get README with error %+v", err)
+				log.Printf("failed to get README with error %+v", err)
 				return item, err
 			}
 

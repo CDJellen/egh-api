@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"strings"
 
 	"github.com/machinebox/graphql"
@@ -25,7 +25,7 @@ func NewReadContributions(cache domain.ExploreApi) ReadContributions {
 			// read from remote
 			item, err = contributionsRequest(ctx, login, 30)
 			if err != nil {
-				fmt.Printf("failed to get CONTRIBUTIONS with error %+v", err)
+				log.Printf("failed to get CONTRIBUTIONS with error %+v", err)
 				return item, err
 			}
 
@@ -56,10 +56,10 @@ func contributionsRequest(ctx context.Context, login domain.Login, last int32) (
 
 	resp := remote.GqlResponse{}
 	if err := client.Run(ctx, req, &resp); err != nil {
-		fmt.Printf("Failed to unpack request with error %+v", err)
+		log.Printf("Failed to unpack request with error %+v", err)
 		return domain.Contributions{}, err
 	}
-	fmt.Printf("response: %s\n%+v", resp, resp)
+	log.Printf("response: %s\n%+v", resp, resp)
 
 	reposContributedTo := []domain.Contribution{}
 

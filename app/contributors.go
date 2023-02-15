@@ -27,7 +27,7 @@ func NewReadContributors(cache domain.ExploreApi) ReadContributors {
 			// read from remote
 			item, err = contributorRequest(ctx, owner, repo, "", 50, 0)
 			if err != nil {
-				fmt.Printf("failed to get CONTRIBUTORS with error %+v", err)
+				log.Printf("failed to get CONTRIBUTORS with error %+v", err)
 				return item, err
 			}
 
@@ -64,7 +64,6 @@ func contributorRequest(ctx context.Context, o domain.Owner, r domain.Repo, anon
 
 	headers := remote.GetGitHubHeaders()
 	url := contributorsUrl(o, r, anon, perPage, page)
-	fmt.Printf("URL: %s", url)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return domain.RepoContributors{}, err
@@ -91,7 +90,7 @@ func contributorRequest(ctx context.Context, o domain.Owner, r domain.Repo, anon
 	log.Printf("body:\n%+v\n%s", body, body)
 	err = json.Unmarshal(body, &item)
 	if err != nil {
-		fmt.Printf("\n\n%+v\n", err)
+		log.Printf("\n\n%+v\n", err)
 		return domain.RepoContributors{}, err
 	}
 

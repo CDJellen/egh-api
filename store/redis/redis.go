@@ -57,7 +57,7 @@ func (cache *RedisCache) ReadInfo(ctx context.Context, owner domain.Owner, repo 
 
 	err = json.Unmarshal(val, &item)
 	if err != nil {
-		fmt.Printf("after unmarshal, err is not nil with value %+v", err)
+		log.Printf("after unmarshal, err is not nil with value %+v", err)
 		return item, err
 	}
 
