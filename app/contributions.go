@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"strings"
 
 	"github.com/cdjellen/egh-api/domain"
 )
@@ -12,15 +13,20 @@ func NewReadContributions(cache domain.ExploreApi) ReadContributions {
 	return func(ctx context.Context, login domain.Login) (domain.Contributions, error) {
 
 		item, err := cache.ReadContributions(ctx, login)
-		if err != nil {
-			return item, err
+		if err == nil {
+			return item, nil
+		}
+		if strings.Contains(err.Error(), "cache miss") {
+			err = cache.CreateContributions(ctx, login, item)
+			if err != nil {
+				return item, err
+			}
+
+			return item, nil
+
 		}
 
-		if err.Error() == "cache miss" {
-			cache.CreateContributions(ctx, login, item)
-		}
-
-		return item, nil
+		return item, err
 	}
 }
 

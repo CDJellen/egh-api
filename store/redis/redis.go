@@ -51,7 +51,7 @@ func (cache *RedisCache) ReadInfo(ctx context.Context, owner domain.Owner, repo 
 	case err != nil:
 		return item, err
 	}
-	err = json.Unmarshal(val, item)
+	err = json.Unmarshal(val, &item)
 	if err != nil {
 		return item, err
 	}
@@ -160,7 +160,7 @@ func (cache *RedisCache) ReadContributors(ctx context.Context, owner domain.Owne
 	case err != nil:
 		return item, err
 	}
-	err = json.Unmarshal(val, item)
+	err = json.Unmarshal(val, &item)
 	if err != nil {
 		return item, err
 	}
@@ -244,7 +244,7 @@ func (cache *RedisCache) ReadContributions(ctx context.Context, login domain.Log
 	case err != nil:
 		return item, err
 	}
-	err = json.Unmarshal(val, item)
+	err = json.Unmarshal(val, &item)
 	if err != nil {
 		return item, err
 	}
@@ -318,7 +318,7 @@ func (cache *RedisCache) ReadReadMe(ctx context.Context, owner domain.Owner, rep
 	case err != nil:
 		return item, err
 	}
-	err = json.Unmarshal(val, item)
+	err = json.Unmarshal(val, &item)
 	if err != nil {
 		return item, err
 	}

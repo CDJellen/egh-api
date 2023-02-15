@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"strings"
 
 	"github.com/cdjellen/egh-api/domain"
 )
@@ -12,15 +13,20 @@ func NewReadReadMe(cache domain.ExploreApi) ReadReadMe {
 	return func(ctx context.Context, owner domain.Owner, repo domain.Repo, main domain.MainBranch, ext domain.FileExt) (domain.ReadMe, error) {
 
 		item, err := cache.ReadReadMe(ctx, owner, repo, main, ext)
-		if err != nil {
-			return item, err
+		if err == nil {
+			return item, nil
+		}
+		if strings.Contains(err.Error(), "cache miss") {
+			err = cache.CreateReadMe(ctx, owner, repo, main, ext, item)
+			if err != nil {
+				return item, err
+			}
+
+			return item, nil
+
 		}
 
-		if err.Error() == "cache miss" {
-			cache.CreateReadMe(ctx, owner, repo, main, ext, item)
-		}
-
-		return item, nil
+		return item, err
 	}
 }
 
