@@ -19,7 +19,7 @@ var (
 	rpc      = flag.String("rpc", ":50051", "gRPC server endpoint")
 	gw       = flag.String("gw", ":8080", "REST gateway endpoint")
 	store    = flag.String("store", "redis", "backend cache for remote requests")
-	rds      = flag.String("redis", "localhost:6379", "address for optional redis cluster") //172.17.0.2:6379
+	rds      = flag.String("redis", "172.17.0.2:6379", "address for optional redis cluster") //localhost:6379
 	user     = flag.String("user", "", "optional redis username")
 	pass     = flag.String("pass", "", "optional redis password")
 	db       = flag.Int("db", 0, "optional redis DB index")
