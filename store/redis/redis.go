@@ -45,16 +45,22 @@ func NewRedisCache(addr string, user string, pass string, DB int) *RedisCache {
 func (cache *RedisCache) ReadInfo(ctx context.Context, owner domain.Owner, repo domain.Repo) (item domain.Contribution, err error) {
 	key := fmt.Sprintf("i-%s/%s", owner, repo)
 	val, err := cache.Client.Get(ctx, key).Bytes()
+
 	switch {
 	case err == redis.Nil:
 		return item, fmt.Errorf("cache miss on repo info %s", key)
 	case err != nil:
 		return item, err
+	case len(val) == 0:
+		return item, fmt.Errorf("cache faulty on repo info %s", key)
 	}
+
 	err = json.Unmarshal(val, &item)
 	if err != nil {
+		fmt.Printf("after unmarshal, err is not nil with value %+v", err)
 		return item, err
 	}
+
 	return item, nil
 }
 
@@ -91,6 +97,10 @@ func (cache *RedisCache) ListInfo(ctx context.Context) (items []domain.Contribut
 
 	keys := []string{}
 	allKeys, err := cache.Client.Do(ctx, "KEYS", "i-*/*").StringSlice()
+	if err != nil {
+		log.Printf("Failed to obtain keys from redis with error %+v", err)
+		return items, err
+	}
 
 	for _, k := range allKeys {
 		if !strings.Contains(k, ".") {
@@ -123,7 +133,7 @@ func (cache *RedisCache) CreateInfo(ctx context.Context, owner domain.Owner, rep
 
 	val, err := json.Marshal(item)
 	if err != nil {
-		log.Printf("Failed to marshall item of type %t with value %+v to byte slice", item, item)
+		log.Printf("Failed to marshall item of type %T with value %+v to byte slice", item, item)
 		return err
 	}
 	res, err := cache.Client.Set(ctx, key, val, 0).Result()
@@ -172,6 +182,10 @@ func (cache *RedisCache) ReadContributors(ctx context.Context, owner domain.Owne
 func (cache *RedisCache) ListContributors(ctx context.Context) (items []domain.RepoContributors, err error) {
 	keys := []string{}
 	allKeys, err := cache.Client.Do(ctx, "KEYS", "c-*/*").StringSlice()
+	if err != nil {
+		log.Printf("Failed to obtain keys from redis with error %+v", err)
+		return items, err
+	}
 
 	for _, k := range allKeys {
 		if !strings.Contains(k, ".") {
@@ -205,7 +219,7 @@ func (cache *RedisCache) CreateContributors(ctx context.Context, owner domain.Ow
 
 	val, err := json.Marshal(item)
 	if err != nil {
-		log.Printf("Failed to marshall item of type %t with value %+v to byte slice", item, item)
+		log.Printf("Failed to marshall item of type %T with value %+v to byte slice", item, item)
 		return err
 	}
 	res, err := cache.Client.Set(ctx, key, val, 0).Result()
@@ -254,6 +268,10 @@ func (cache *RedisCache) ReadContributions(ctx context.Context, login domain.Log
 
 func (cache *RedisCache) ListContributions(ctx context.Context) (items []domain.Contributions, err error) {
 	keys, err := cache.Client.Do(ctx, "KEYS", "l-*").StringSlice()
+	if err != nil {
+		log.Printf("Failed to obtain keys from redis with error %+v", err)
+		return items, err
+	}
 
 	// iterate through the obtained keys
 	for _, k := range keys {
@@ -279,7 +297,7 @@ func (cache *RedisCache) CreateContributions(ctx context.Context, login domain.L
 
 	val, err := json.Marshal(item)
 	if err != nil {
-		log.Printf("Failed to marshall item of type %t with value %+v to byte slice", item, item)
+		log.Printf("Failed to marshall item of type %T with value %+v to byte slice", item, item)
 		return err
 	}
 	res, err := cache.Client.Set(ctx, key, val, 0).Result()
@@ -329,6 +347,10 @@ func (cache *RedisCache) ReadReadMe(ctx context.Context, owner domain.Owner, rep
 
 func (cache *RedisCache) ListReadMe(ctx context.Context) (items []domain.ReadMe, err error) {
 	keys, err := cache.Client.Do(ctx, "KEYS", "r-*").StringSlice()
+	if err != nil {
+		log.Printf("Failed to obtain keys from redis with error %+v", err)
+		return items, err
+	}
 
 	// iterate through the obtained keys
 	for _, k := range keys {
@@ -361,7 +383,7 @@ func (cache *RedisCache) CreateReadMe(ctx context.Context, owner domain.Owner, r
 
 	val, err := json.Marshal(item)
 	if err != nil {
-		log.Printf("Failed to marshall item of type %t with value %+v to byte slice", item, item)
+		log.Printf("Failed to marshall item of type %T with value %+v to byte slice", item, item)
 		return err
 	}
 	res, err := cache.Client.Set(ctx, key, val, 0).Result()
