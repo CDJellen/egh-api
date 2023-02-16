@@ -11,19 +11,19 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 )
 
-type ReadContributions func(context.Context, domain.Login) (domain.Contributions, error)
+type ReadContributions func(context.Context, domain.Login, int32) (domain.Contributions, error)
 
 func NewReadContributions(cache domain.ExploreApi) ReadContributions {
-	return func(ctx context.Context, login domain.Login) (domain.Contributions, error) {
+	return func(ctx context.Context, login domain.Login, numContributions int32) (domain.Contributions, error) {
 
 		// check the cache
-		item, err := cache.ReadContributions(ctx, login)
+		item, err := cache.ReadContributions(ctx, login) // TODO get arbitrary number of contributions from cache
 		if err == nil {
 			return item, nil
 		}
 		if strings.Contains(err.Error(), "cache miss") {
 			// read from remote
-			item, err = contributionsRequest(ctx, login, 30)
+			item, err = contributionsRequest(ctx, login, numContributions)
 			if err != nil {
 				log.Printf("failed to get CONTRIBUTIONS with error %+v", err)
 				return item, err

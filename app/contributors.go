@@ -13,10 +13,10 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 )
 
-type ReadContributors func(context.Context, domain.Owner, domain.Repo) (domain.RepoContributors, error)
+type ReadContributors func(context.Context, domain.Owner, domain.Repo, string, int32, int32) (domain.RepoContributors, error)
 
 func NewReadContributors(cache domain.ExploreApi) ReadContributors {
-	return func(ctx context.Context, owner domain.Owner, repo domain.Repo) (domain.RepoContributors, error) {
+	return func(ctx context.Context, owner domain.Owner, repo domain.Repo, anon string, perPage int32, page int32) (domain.RepoContributors, error) {
 
 		// check the cache
 		item, err := cache.ReadContributors(ctx, owner, repo)
@@ -25,7 +25,7 @@ func NewReadContributors(cache domain.ExploreApi) ReadContributors {
 		}
 		if strings.Contains(err.Error(), "cache miss") {
 			// read from remote
-			item, err = contributorRequest(ctx, owner, repo, "", 50, 0)
+			item, err = contributorRequest(ctx, owner, repo, anon, perPage, page)
 			if err != nil {
 				log.Printf("failed to get CONTRIBUTORS with error %+v", err)
 				return item, err
@@ -45,7 +45,7 @@ func NewReadContributors(cache domain.ExploreApi) ReadContributors {
 	}
 }
 
-func contributorsUrl(o domain.Owner, r domain.Repo, anon string, perPage int, page int) string {
+func contributorsUrl(o domain.Owner, r domain.Repo, anon string, perPage int32, page int32) string {
 	baseUrl := fmt.Sprintf("https://api.github.com/repos/%s/%s/contributors?per_page=%s", o, r, fmt.Sprint(perPage))
 	if anon != "" {
 		baseUrl = fmt.Sprintf("%s?anon=%s", baseUrl, anon)
@@ -57,9 +57,9 @@ func contributorsUrl(o domain.Owner, r domain.Repo, anon string, perPage int, pa
 	return baseUrl
 }
 
-func contributorRequest(ctx context.Context, o domain.Owner, r domain.Repo, anon string, perPage int, page int) (domain.RepoContributors, error) {
+func contributorRequest(ctx context.Context, o domain.Owner, r domain.Repo, anon string, perPage int32, page int32) (domain.RepoContributors, error) {
 	if perPage == 0 {
-		perPage = 50
+		perPage = 25
 	}
 
 	headers := remote.GetGitHubHeaders()

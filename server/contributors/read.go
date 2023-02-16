@@ -12,7 +12,7 @@ type Read func(context.Context, *pb.ReadContributorsRequest) (*pb.ReadContributo
 
 func NewRead(handler app.ReadContributors) Read {
 	return func(ctx context.Context, req *pb.ReadContributorsRequest) (*pb.ReadContributorsResponse, error) {
-		item, err := handler(ctx, domain.Owner(req.Owner), domain.Repo(req.Repo))
+		item, err := handler(ctx, domain.Owner(req.GetOwner()), domain.Repo(req.GetRepo()), req.GetAnon(), req.GetPerPage(), req.GetPage())
 		if err != nil {
 			return &pb.ReadContributorsResponse{Message: ToPb(item)}, err
 		}

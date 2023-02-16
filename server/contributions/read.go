@@ -12,7 +12,7 @@ type Read func(context.Context, *pb.ReadContributionsRequest) (*pb.ReadContribut
 
 func NewRead(handler app.ReadContributions) Read {
 	return func(ctx context.Context, req *pb.ReadContributionsRequest) (*pb.ReadContributionsResponse, error) {
-		item, err := handler(ctx, domain.Login(req.Login))
+		item, err := handler(ctx, domain.Login(req.GetLogin()), req.GetNumContributions())
 		if err != nil {
 			return &pb.ReadContributionsResponse{Message: ToPb(item)}, err
 		}
