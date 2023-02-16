@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/cdjellen/egh-api/app/remote"
 	"github.com/cdjellen/egh-api/domain"
-	"github.com/cdjellen/egh-api/server/remote"
 )
 
 type ReadReadMe func(context.Context, domain.Owner, domain.Repo, domain.MainBranch, domain.FileExt) (domain.ReadMe, error)

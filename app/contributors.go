@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/cdjellen/egh-api/app/remote"
 	"github.com/cdjellen/egh-api/domain"
-	"github.com/cdjellen/egh-api/server/remote"
 )
 
 type ReadContributors func(context.Context, domain.Owner, domain.Repo) (domain.RepoContributors, error)

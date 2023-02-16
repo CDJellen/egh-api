@@ -7,8 +7,8 @@ import (
 
 	"github.com/machinebox/graphql"
 
+	"github.com/cdjellen/egh-api/app/remote"
 	"github.com/cdjellen/egh-api/domain"
-	"github.com/cdjellen/egh-api/server/remote"
 )
 
 type ReadContributions func(context.Context, domain.Login) (domain.Contributions, error)
