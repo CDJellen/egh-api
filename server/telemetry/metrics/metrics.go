@@ -2,7 +2,6 @@ package metrics
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -22,7 +21,7 @@ func NewGrpcMetricsProvider(ctx context.Context, serviceName string, metricAddr 
 	}
 
 	// define applicable resource tags
-	resources := resource.NewWithAttributes(semconv.SchemaURL, attribute.String("tracer address", fmt.Sprintf("%s", metricAddr)), attribute.String("service name", "egh-api"))
+	resources := resource.NewWithAttributes(semconv.SchemaURL, attribute.String("tracer address", metricAddr), attribute.String("service name", "egh-api"))
 
 	// define a new periodic reader
 	interval := sdkmetric.WithInterval(time.Duration(freq) * time.Second)

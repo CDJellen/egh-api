@@ -2,7 +2,6 @@ package tracing
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"go.opentelemetry.io/otel"
@@ -22,7 +21,7 @@ func NewGrpcTraceProvider(ctx context.Context, serviceName string, traceAddr str
 	}
 
 	// define applicable resource tags
-	resources := resource.NewWithAttributes(semconv.SchemaURL, attribute.String("tracer address", fmt.Sprintf("%s", traceAddr)), attribute.String("service name", "egh-api"))
+	resources := resource.NewWithAttributes(semconv.SchemaURL, attribute.String("tracer address", traceAddr), attribute.String("service name", "egh-api"))
 
 	// define sampling rate
 	sampler := trace.ParentBased(trace.TraceIDRatioBased(sampling))
