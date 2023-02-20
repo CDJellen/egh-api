@@ -8,6 +8,7 @@ import (
 	"os/signal"
 
 	"github.com/cdjellen/egh-api/server"
+	"github.com/cdjellen/egh-api/server/telemetry/tracing"
 	"github.com/cdjellen/egh-api/store/mem"
 	"github.com/cdjellen/egh-api/store/redis"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -18,17 +19,26 @@ var (
 	protocol = flag.String("protocol", "tcp", "protocol type")
 	rpc      = flag.String("rpc", ":50051", "gRPC server endpoint")
 	gw       = flag.String("gw", ":8080", "REST gateway endpoint")
+	trace    = flag.String("tp", ":4317", "OpenTelemetry tracing endpoint")
 	store    = flag.String("store", "redis", "backend cache for remote requests")
 	rds      = flag.String("redis", "localhost:6379", "address for optional redis cluster")
 	user     = flag.String("user", "", "optional redis username")
 	pass     = flag.String("pass", "", "optional redis password")
 	db       = flag.Int("db", 0, "optional redis DB index")
+	sampling = flag.Float64("sampling", 1.0, "tracing sampling ratio")
 )
 
 func main() {
 	flag.Parse()
 
 	ctx, cancel := context.WithCancel(context.Background())
+	{
+		provider, err := tracing.NewGrpcTraceProvider(ctx, *name, *trace, *sampling)
+		if err != nil {
+			log.Printf("failed to stand up new otel tracing provider at address %s with sampling ratio %v", *trace, *sampling)
+		}
+		defer provider.Shutdown(ctx)
+	}
 	defer cancel()
 
 	quit := make(chan os.Signal, 1)
