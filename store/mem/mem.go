@@ -83,9 +83,15 @@ func (cache *ExploreApiCache) UpdateInfo(ctx context.Context, owner domain.Owner
 
 }
 
-func (cache *ExploreApiCache) ReadContributors(ctx context.Context, owner domain.Owner, repo domain.Repo) (item domain.RepoContributors, err error) {
+func (cache *ExploreApiCache) ReadContributors(ctx context.Context, owner domain.Owner, repo domain.Repo, topN int32) (item domain.RepoContributors, err error) {
 	key := fmt.Sprintf("c-%s/%s", owner, repo)
 	if item, ok := cache.contributorsCache[key]; ok {
+		// get the appropriate number of items
+		if len(item.RepoContributors) > int(topN) {
+			topNItems := item.RepoContributors[0:topN]
+			item = domain.RepoContributors{RepoContributors: topNItems}
+		}
+
 		return item, nil
 	}
 
@@ -115,7 +121,7 @@ func (cache *ExploreApiCache) CreateContributors(ctx context.Context, owner doma
 }
 
 func (cache *ExploreApiCache) UpdateContributors(ctx context.Context, owner domain.Owner, repo domain.Repo, item domain.RepoContributors) error {
-	_, err := cache.ReadContributors(ctx, owner, repo)
+	_, err := cache.ReadContributors(ctx, owner, repo, 100)
 	if err != nil {
 		return err
 	}
@@ -132,11 +138,19 @@ func (cache *ExploreApiCache) UpdateContributors(ctx context.Context, owner doma
 
 }
 
-func (cache *ExploreApiCache) ReadContributions(ctx context.Context, login domain.Login) (item domain.Contributions, err error) {
+func (cache *ExploreApiCache) ReadContributions(ctx context.Context, login domain.Login, numContributions int32) (item domain.Contributions, err error) {
 	key := fmt.Sprintf("l-%s", login)
 
 	if item, ok := cache.contributionsCache[key]; ok {
-		return item, nil
+		// get the appropriate number of items
+		if len(item.Contributions) > int(numContributions) {
+			name := item.Name
+			url := item.Url
+			avatarUrl := item.AvatarUrl
+			topNItems := item.Contributions[0:numContributions]
+			// set item to include only `numContributions` contributions
+			item = domain.Contributions{Name: name, Url: url, AvatarUrl: avatarUrl, Contributions: topNItems}
+		}
 	}
 
 	return item, fmt.Errorf("cache miss on login %s", key)
@@ -165,7 +179,7 @@ func (cache *ExploreApiCache) CreateContributions(ctx context.Context, login dom
 }
 
 func (cache *ExploreApiCache) UpdateContributions(ctx context.Context, login domain.Login, item domain.Contributions) error {
-	_, err := cache.ReadContributions(ctx, login)
+	_, err := cache.ReadContributions(ctx, login, 100)
 	if err != nil {
 		return err
 	}

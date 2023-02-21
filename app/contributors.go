@@ -13,19 +13,19 @@ import (
 	"github.com/cdjellen/egh-api/domain"
 )
 
-type ReadContributors func(context.Context, domain.Owner, domain.Repo, string, int32, int32) (domain.RepoContributors, error)
+type ReadContributors func(context.Context, domain.Owner, domain.Repo, int32) (domain.RepoContributors, error)
 
 func NewReadContributors(cache domain.ExploreApi) ReadContributors {
-	return func(ctx context.Context, owner domain.Owner, repo domain.Repo, anon string, perPage int32, page int32) (domain.RepoContributors, error) {
+	return func(ctx context.Context, owner domain.Owner, repo domain.Repo, topN int32) (domain.RepoContributors, error) {
 
 		// check the cache
-		item, err := cache.ReadContributors(ctx, owner, repo)
+		item, err := cache.ReadContributors(ctx, owner, repo, topN)
 		if err == nil {
 			return item, nil
 		}
 		if strings.Contains(err.Error(), "cache miss") {
 			// read from remote
-			item, err = contributorRequest(ctx, owner, repo, anon, perPage, page)
+			item, err = contributorRequest(ctx, owner, repo, "false", 100, 1)
 			if err != nil {
 				log.Printf("failed to get CONTRIBUTORS with error %+v", err)
 				return item, err
@@ -36,9 +36,11 @@ func NewReadContributors(cache domain.ExploreApi) ReadContributors {
 			if err != nil {
 				return item, err
 			}
-
+		}
+		// pull from cache with params
+		item, err = cache.ReadContributors(ctx, owner, repo, topN)
+		if err == nil {
 			return item, nil
-
 		}
 
 		return item, err

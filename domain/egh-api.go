@@ -7,9 +7,9 @@ import (
 type ExploreApiReader interface {
 	ReadInfo(context.Context, Owner, Repo) (Contribution, error)
 	ListInfo(context.Context) ([]Contribution, error)
-	ReadContributors(context.Context, Owner, Repo) (RepoContributors, error)
+	ReadContributors(context.Context, Owner, Repo, int32) (RepoContributors, error)
 	ListContributors(context.Context) ([]RepoContributors, error)
-	ReadContributions(context.Context, Login) (Contributions, error)
+	ReadContributions(context.Context, Login, int32) (Contributions, error)
 	ListContributions(context.Context) ([]Contributions, error)
 	ReadReadMe(context.Context, Owner, Repo, MainBranch, FileExt) (ReadMe, error)
 	ListReadMe(context.Context) ([]ReadMe, error)

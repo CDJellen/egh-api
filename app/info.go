@@ -36,9 +36,11 @@ func NewReadInfo(cache domain.ExploreApi) ReadInfo {
 			if err != nil {
 				return item, err
 			}
-
+		}
+		// pull from cache with params
+		item, err = cache.ReadInfo(ctx, owner, repo)
+		if err == nil {
 			return item, nil
-
 		}
 
 		return item, err

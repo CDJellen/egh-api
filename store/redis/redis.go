@@ -161,7 +161,7 @@ func (cache *RedisCache) UpdateInfo(ctx context.Context, owner domain.Owner, rep
 	return nil
 }
 
-func (cache *RedisCache) ReadContributors(ctx context.Context, owner domain.Owner, repo domain.Repo) (item domain.RepoContributors, err error) {
+func (cache *RedisCache) ReadContributors(ctx context.Context, owner domain.Owner, repo domain.Repo, topN int32) (item domain.RepoContributors, err error) {
 	key := fmt.Sprintf("c-%s/%s", owner, repo)
 	val, err := cache.Client.Get(ctx, key).Bytes()
 	switch {
@@ -173,6 +173,12 @@ func (cache *RedisCache) ReadContributors(ctx context.Context, owner domain.Owne
 	err = json.Unmarshal(val, &item)
 	if err != nil {
 		return item, err
+	}
+
+	// get the appropriate number of items
+	if len(item.RepoContributors) > int(topN) {
+		topNItems := item.RepoContributors[0:topN]
+		item = domain.RepoContributors{RepoContributors: topNItems}
 	}
 
 	return item, nil
@@ -199,7 +205,7 @@ func (cache *RedisCache) ListContributors(ctx context.Context) (items []domain.R
 		owner := domain.Owner(strings.Split(k, "/")[0])
 		repo := domain.Repo(strings.Split(k, "/")[1])
 
-		item, err := cache.ReadContributors(ctx, owner, repo)
+		item, err := cache.ReadContributors(ctx, owner, repo, 100)
 		if err != nil {
 			log.Printf("Failed to read item with key %s from redis cache.", k)
 			continue
@@ -235,7 +241,7 @@ func (cache *RedisCache) CreateContributors(ctx context.Context, owner domain.Ow
 }
 
 func (cache *RedisCache) UpdateContributors(ctx context.Context, owner domain.Owner, repo domain.Repo, item domain.RepoContributors) error {
-	_, err := cache.ReadContributors(ctx, owner, repo)
+	_, err := cache.ReadContributors(ctx, owner, repo, 100)
 	if err != nil {
 		return err
 	}
@@ -249,7 +255,7 @@ func (cache *RedisCache) UpdateContributors(ctx context.Context, owner domain.Ow
 
 }
 
-func (cache *RedisCache) ReadContributions(ctx context.Context, login domain.Login) (item domain.Contributions, err error) {
+func (cache *RedisCache) ReadContributions(ctx context.Context, login domain.Login, numContributions int32) (item domain.Contributions, err error) {
 	key := fmt.Sprintf("l-%s", login)
 	val, err := cache.Client.Get(ctx, key).Bytes()
 	switch {
@@ -263,7 +269,18 @@ func (cache *RedisCache) ReadContributions(ctx context.Context, login domain.Log
 		return item, err
 	}
 
+	// get the appropriate number of items
+	if len(item.Contributions) > int(numContributions) {
+		name := item.Name
+		url := item.Url
+		avatarUrl := item.AvatarUrl
+		topNItems := item.Contributions[0:numContributions]
+		// set item to include only `numContributions` contributions
+		item = domain.Contributions{Name: name, Url: url, AvatarUrl: avatarUrl, Contributions: topNItems}
+	}
+
 	return item, nil
+
 }
 
 func (cache *RedisCache) ListContributions(ctx context.Context) (items []domain.Contributions, err error) {
@@ -277,7 +294,7 @@ func (cache *RedisCache) ListContributions(ctx context.Context) (items []domain.
 	for _, k := range keys {
 		login := domain.Login(strings.TrimLeft(k, "l-"))
 
-		item, err := cache.ReadContributions(ctx, login)
+		item, err := cache.ReadContributions(ctx, login, 100)
 		if err != nil {
 			log.Printf("Failed to read item with key %s from redis cache.", k)
 			continue
@@ -312,7 +329,7 @@ func (cache *RedisCache) CreateContributions(ctx context.Context, login domain.L
 }
 
 func (cache *RedisCache) UpdateContributions(ctx context.Context, login domain.Login, item domain.Contributions) error {
-	_, err := cache.ReadContributions(ctx, login)
+	_, err := cache.ReadContributions(ctx, login, 100)
 	if err != nil {
 		return err
 	}

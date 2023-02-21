@@ -37,9 +37,11 @@ func NewReadReadMe(cache domain.ExploreApi) ReadReadMe {
 			if err != nil {
 				return item, err
 			}
-
+		}
+		// pull from cache with params
+		item, err = cache.ReadReadMe(ctx, owner, repo, main, ext)
+		if err == nil {
 			return item, nil
-
 		}
 
 		return item, err
