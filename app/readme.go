@@ -33,8 +33,13 @@ func NewReadReadMe(cache domain.ExploreApi) ReadReadMe {
 			}
 
 			// persist to cache
-			err = cache.CreateReadMe(ctx, owner, repo, main, ext, item)
-			if err != nil {
+			if item.Html != readMeNotFound(owner, repo) {
+				err = cache.CreateReadMe(ctx, owner, repo, main, ext, item)
+				if err != nil {
+					return item, err
+				}
+			} else {
+				// return readMeNotFound but do not persist to cache
 				return item, err
 			}
 		}
