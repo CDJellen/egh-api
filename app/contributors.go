@@ -89,7 +89,6 @@ func contributorRequest(ctx context.Context, o domain.Owner, r domain.Repo, anon
 	if err != nil {
 		return domain.RepoContributors{}, err
 	}
-	log.Printf("body:\n%+v\n%s", body, body)
 	err = json.Unmarshal(body, &item)
 	if err != nil {
 		log.Printf("\n\n%+v\n", err)

@@ -108,7 +108,6 @@ func GetGitHubHeaders() *http.Header {
 			"Authorization":        []string{fmt.Sprintf("Bearer %s", os.Getenv("GITHUB_TOKEN"))},
 		}
 	}
-	fmt.Printf("%+v", gitHubHeaders)
 	return gitHubHeaders
 }
 

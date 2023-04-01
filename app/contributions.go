@@ -61,7 +61,6 @@ func contributionsRequest(ctx context.Context, login domain.Login, last int32) (
 		log.Printf("Failed to unpack request with error %+v", err)
 		return domain.Contributions{}, err
 	}
-	log.Printf("response: %s\n%+v", resp, resp)
 
 	reposContributedTo := []domain.Contribution{}
 

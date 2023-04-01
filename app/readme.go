@@ -65,7 +65,7 @@ func readMeNotFound(o domain.Owner, r domain.Repo) (resp string) {
 func readMeMdRequest(ctx context.Context, o domain.Owner, r domain.Repo, m domain.MainBranch, e domain.FileExt) (status int, body []byte, err error) {
 	headers := remote.GetReadMeHeaders()
 	url := readMeUrl(o, r, m, e)
-	log.Printf("url: %s, headers: %v", url, *headers)
+
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return 500, body, err
