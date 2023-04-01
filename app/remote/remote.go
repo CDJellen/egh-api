@@ -103,11 +103,12 @@ func GetGitHubHeaders() *http.Header {
 	if gitHubHeaders == nil {
 		gitHubHeaders = &http.Header{
 			"Content-Type":         []string{"application/vnd.github+json"},
-			"User-Agent":           []string{"DiscoverOpenSource"},
+			"User-Agent":           []string{"ExploreGitHub"},
 			"X-GitHub-Api-Version": []string{"2022-11-28"},
 			"Authorization":        []string{fmt.Sprintf("Bearer %s", os.Getenv("GITHUB_TOKEN"))},
 		}
 	}
+	fmt.Printf("%+v", gitHubHeaders)
 	return gitHubHeaders
 }
 
@@ -115,7 +116,7 @@ func GetReadMeHeaders() *http.Header {
 	if readMeHeaders == nil {
 		readMeHeaders = &http.Header{
 			"Accept":     []string{"text/html"},
-			"User-Agent": []string{"DiscoverOpenSource"},
+			"User-Agent": []string{"ExploreGitHub"},
 		}
 	}
 	return readMeHeaders

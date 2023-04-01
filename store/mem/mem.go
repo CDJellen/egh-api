@@ -151,6 +151,9 @@ func (cache *ExploreApiCache) ReadContributions(ctx context.Context, login domai
 			// set item to include only `numContributions` contributions
 			item = domain.Contributions{Name: name, Url: url, AvatarUrl: avatarUrl, Contributions: topNItems}
 		}
+
+		return item, nil
+
 	}
 
 	return item, fmt.Errorf("cache miss on login %s", key)
