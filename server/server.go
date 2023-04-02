@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"log"
 	"net"
@@ -21,6 +22,11 @@ import (
 	"github.com/cdjellen/egh-api/server/info"
 	"github.com/cdjellen/egh-api/server/readme"
 )
+
+// content is our static web server content.
+//
+//go:embed frontend swagger
+var content embed.FS
 
 type HealthServer struct {
 	HealthEndpoint health.Read
