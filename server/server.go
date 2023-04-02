@@ -25,7 +25,7 @@ import (
 
 // content is our static web server content.
 //
-//go:embed frontend swagger
+//go:embed frontend/* swagger/*
 var content embed.FS
 
 type HealthServer struct {
