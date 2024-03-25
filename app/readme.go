@@ -54,8 +54,7 @@ func NewReadReadMe(cache domain.ExploreApi) ReadReadMe {
 }
 
 func readMeUrl(o domain.Owner, r domain.Repo, m domain.MainBranch, e domain.FileExt) string {
-	encodedElem := remote.UrlEncode(fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/%s/README.%s", o, r, m, e))
-	return fmt.Sprintf("%s%s", remote.GetReadMeEndpoint(), encodedElem)
+	return fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/%s/README.%s", o, r, m, e)
 }
 
 func readMeNotFound(o domain.Owner, r domain.Repo) (resp string) {

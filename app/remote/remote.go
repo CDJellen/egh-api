@@ -121,13 +121,6 @@ func GetReadMeHeaders() *http.Header {
 	return readMeHeaders
 }
 
-func GetReadMeEndpoint() string {
-	if readMeEndpoint == "" {
-		readMeEndpoint = os.Getenv("README_ENDPOINT")
-	}
-	return readMeEndpoint
-}
-
 func GetMarkdownUrl() string {
 	return markdownUrl
 }
