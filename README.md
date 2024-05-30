@@ -6,16 +6,16 @@ This repository contains the source code for the backend of the "Explore GitHub"
 
 This project was developed from a protobuf definition of the API, which was used to generate the server and client code. The server was developed using the `grpc` framework, and the client was developed using the `grpc-web` framework. The server was developed in `Go`, and the client was developed in `TypeScript`. The server was containerized using `Docker`, and the client was containerized using `Docker` and `Nginx`.
 
-To get started, clone the repository and navigate to the root directory of the project. Create the `egh-api.env` settings file.
+To get started, clone the repository and navigate to the root directory of the project. Create the `.env` settings file.
 
 ```bash
 git clone --recursive
 cd egh-api
-touch egh-api.env
-nano egh-api.env
+touch .env
+nano .env
 ```
 
-Once the `egh-api.env` file is created, add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to the file.
+Once the `.env` file is created, add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to the file.
 
 ```bash
 GITHUB_TOKEN=ghp_...  # access token required to leverage the GraphQL API (does not need any permissions)
